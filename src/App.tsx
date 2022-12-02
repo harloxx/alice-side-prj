@@ -1,7 +1,8 @@
+import SearchSub from '@pages/SearchSub';
 import React from 'react';
 
 function App() {
-  return <div>hi</div>;
+  return <SearchSub />;
 }
 
 export default App;
