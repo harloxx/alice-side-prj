@@ -1,3 +1,16 @@
+@import '../../styles/utils.scss';
+
 .container {
   background-color: aliceblue;
+  width: 100%;
+  box-sizing: border-box;
+  @include desktop {
+    padding: 24px;
+    background-color: pink;
+  }
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(296px, auto));
+    grid-gap: 16px;
+  }
 }
