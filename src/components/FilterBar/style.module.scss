@@ -1,0 +1,51 @@
+@import '../../styles/utils.scss';
+
+.container {
+  width: 100%;
+  border: 0.5px solid rgb(225, 226, 228);
+
+  .content {
+    background-color: $white;
+    display: flex;
+    border: 1px solid rgb(225, 226, 228);
+    .tag {
+      width: 80px;
+      min-width: 80px;
+      padding: 0.875rem 1rem;
+      background-color: rgb(249, 250, 252);
+      border-right: 0.5px solid rgb(225, 226, 228);
+      font-size: 0.875rem;
+    }
+  }
+  .content-filter {
+    display: flex;
+    overflow: auto;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+  button {
+    margin: 0.5rem;
+    display: inline-flex;
+    -webkit-box-align: center;
+    align-items: center;
+    border: 1px solid rgb(240, 241, 243);
+    font-weight: normal;
+    transition: all 150ms ease-in-out 0s;
+    cursor: pointer;
+    padding: 0.25rem 0.75rem;
+    min-width: 1.875rem;
+    height: 1.875rem;
+    border-radius: 1.875rem;
+    font-size: 0.875rem;
+    background: rgb(240, 241, 243);
+
+    color: rgb(94, 95, 97);
+    line-height: 1.5;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+}

@@ -1,0 +1,12 @@
+$desktop: 1024px;
+
+/* 색상 */
+$border-color: rgb(201, 202, 204);
+$white: rgb(255, 255, 255);
+
+/*브라우저 크기가 1024px 이상일때*/
+@mixin desktop {
+  @media (min-width: $desktop) {
+    @content;
+  }
+}
