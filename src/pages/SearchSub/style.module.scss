@@ -13,4 +13,43 @@
     grid-template-columns: repeat(auto-fill, minmax(296px, auto));
     grid-gap: 16px;
   }
+  span {
+    font-size: 12px;
+    font-weight: bolder;
+  }
+  hr {
+    margin: 10px 0 20px 0;
+    border: 0;
+    height: 01px;
+    background-color: rgb(225, 226, 228);
+  }
+
+  .index {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin: 50px 0 100px 0;
+    align-items: center;
+    .arrow-deactive {
+      color: #ccc;
+    }
+    .arrow-active {
+      color: #222;
+    }
+
+    .index-num-deactive {
+      width: 24px;
+      height: 24px;
+      color: #999;
+      text-align: center;
+      margin: 0 5px;
+      cursor: pointer;
+    }
+    .index-num-active {
+      @extend .index-num-deactive;
+      color: white;
+      background-color: #524fa1;
+      border-radius: 5px;
+    }
+  }
 }

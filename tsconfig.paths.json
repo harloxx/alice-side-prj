@@ -5,7 +5,8 @@
       "@components/*": ["./components/*"],
       "@pages/*": ["./pages/*"],
       "@styles/*": ["./styles/*"],
-      "@constants/*": ["./constants/*"]
+      "@constants/*": ["./constants/*"],
+      "@api/*": ["./api/*"]
     }
   }
 }
