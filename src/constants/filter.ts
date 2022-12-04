@@ -34,6 +34,11 @@ const FILTER_CATEGORYS = [
   {
     title: '가격',
     contents: ['무료', '유료', '구독'],
+    json: [
+      { enroll_type: 0, is_free: true },
+      { enroll_type: 0, is_free: false },
+      { enroll_type: 4 },
+    ],
   },
 ] as const;
 

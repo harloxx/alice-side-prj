@@ -2,11 +2,17 @@ import FILTER_CATEGORYS from '../../constants/filter';
 import React, { useState, useEffect } from 'react';
 import $ from './style.module.scss';
 import findAllIndex from '../../utils/findAllIndex';
+import { useAppDispatch } from '../../store';
+import { setFilter } from '../../store/features/filterSlice';
 
 export default function FilterBar() {
   const [isCategorySelect, setIsCategorySelect] = useState<any>(false);
-  const [price, setPrice] = useState([]);
-  const [priceIdx, setPriceIdx] = useState<any>([]);
+
+  const dispatch = useAppDispatch();
+  const setFilterValue = (val: Object) => {
+    dispatch(setFilter(val));
+  };
+
   useEffect(() => {
     let arrTest: boolean[][] = [];
     FILTER_CATEGORYS.map(x => {
@@ -16,25 +22,16 @@ export default function FilterBar() {
     setIsCategorySelect(arrTest);
   }, []);
 
-  const setPriceTag = () => {};
-
   const handleClick = (row: number, column: number) => {
     const tmp = isCategorySelect;
     tmp[row][column] = !isCategorySelect[row][column];
-    //console.log(findAllIndex(tmp[0], true));
     setIsCategorySelect(tmp);
-    setPriceIdx(findAllIndex(tmp[2], true));
-    console.log(priceIdx);
+    let a: Object[] = [];
+    findAllIndex(tmp[2], true).map((x: number) => {
+      a.push(FILTER_CATEGORYS[2].json[x]);
+    });
+    setFilterValue(a);
   };
-
-  // const hh = (idx: number, idx2: number) => {
-  //   handleClick(idx, idx2);
-  //   console.log(idx, idx2);
-  //   console.log(isCategorySelect[idx][idx2]);
-  //   console.log(isCategorySelect[idx][idx2] ? 'tt' : 'ff');
-  // };
-
-  console.log(isCategorySelect, ' ');
 
   return (
     <div className={$.container}>
@@ -48,7 +45,6 @@ export default function FilterBar() {
                   <div key={idx2}>
                     <button
                       onClick={() => handleClick(idx, idx2)}
-                      // prob. 색이 변하지 않는 문제
                       className={
                         isCategorySelect[idx][idx2]
                           ? $['active']

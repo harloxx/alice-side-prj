@@ -7,6 +7,7 @@ import $ from './style.module.scss';
 import { AiOutlineRight, AiOutlineLeft } from 'react-icons/ai';
 
 import calcArrayView from '../../utils/calcArrayView';
+import { useAppSelector } from '../../store';
 
 export default function SearchSub() {
   const [courseList, setCourseList] = useState([]);
@@ -21,8 +22,12 @@ export default function SearchSub() {
       ? Math.floor(courseCount / DISPLAY_CARD)
       : Math.ceil(courseCount / DISPLAY_CARD);
   const SIDE_DISPLAY_INDEX = Math.floor(MAX_PAGE / 2);
+
+  const { filter } = useAppSelector(state => state.filter);
+  console.log('!! 필터 : ', filter);
+
   useEffect(() => {
-    getAllCourseList(current * DISPLAY_CARD, DISPLAY_CARD)
+    getAllCourseList(filter, current * DISPLAY_CARD, DISPLAY_CARD)
       .then((data: any) => {
         setCourseCount(data.course_count);
         setCourseList(data.courses);
@@ -76,13 +81,21 @@ export default function SearchSub() {
       setArrayView(calcArrayView(1, MAX_PAGE));
     }
     setCurrent(current);
-    getAllCourseList((current - 1) * DISPLAY_CARD, DISPLAY_CARD)
+    getAllCourseList(filter, (current - 1) * DISPLAY_CARD, DISPLAY_CARD)
       .then((data: any) => {
         setCourseCount(data.course_count);
         setCourseList(data.courses);
       })
       .catch(err => console.log(err));
   }, [current]);
+  useEffect(() => {
+    getAllCourseList(filter, current * DISPLAY_CARD, DISPLAY_CARD)
+      .then((data: any) => {
+        setCourseCount(data.course_count);
+        setCourseList(data.courses);
+      })
+      .catch(err => console.log(err));
+  }, [filter]);
 
   return (
     <div className={$.container}>
