@@ -10,10 +10,7 @@ import calcArrayView from '../../utils/calcArrayView';
 import { useAppSelector } from '../../store';
 
 export default function SearchSub() {
-  const [courseList, setCourseList] = useState([]);
   const [courseCount, setCourseCount] = useState(0);
-  const [arrayView, setArrayView] = useState<number[]>([]);
-  const [current, setCurrent] = useState(0);
 
   const MAX_PAGE: number = 9;
   const DISPLAY_CARD: number = 20;
@@ -23,10 +20,15 @@ export default function SearchSub() {
       : Math.ceil(courseCount / DISPLAY_CARD);
   const SIDE_DISPLAY_INDEX = Math.floor(MAX_PAGE / 2);
 
+  const [courseList, setCourseList] = useState([]);
+  const [arrayView, setArrayView] = useState<number[]>([]);
+  const [current, setCurrent] = useState(0);
+  //const [displayIdx,setDisplayIdx]=useState(DISPLAY_INDEX_INIT)
+
   const { filter } = useAppSelector(state => state.filter);
-  console.log('!! 필터 : ', filter);
 
   useEffect(() => {
+    console.log('11');
     getAllCourseList(filter, current * DISPLAY_CARD, DISPLAY_CARD)
       .then((data: any) => {
         setCourseCount(data.course_count);
@@ -36,16 +38,24 @@ export default function SearchSub() {
         //맨 처음 접속 시 current index 값 1
         if (current === 1) {
           //현재 값은 redux-persist로 저장해야할 듯
-          setCurrent(1);
+          setCurrent(prev => {
+            return 1;
+          });
           {
             DISPLAY_INDEX >= 1
               ? DISPLAY_INDEX >= MAX_PAGE
-                ? setArrayView(calcArrayView(1, MAX_PAGE))
-                : setArrayView(calcArrayView(1, DISPLAY_INDEX))
+                ? setArrayView(prev => {
+                    return calcArrayView(1, MAX_PAGE);
+                  })
+                : setArrayView(prev => {
+                    return calcArrayView(1, DISPLAY_INDEX);
+                  })
               : '';
           }
         } else {
-          setCurrent(current);
+          setCurrent(prev => {
+            return current;
+          });
         }
       })
       .catch((err: any) => {
@@ -53,49 +63,81 @@ export default function SearchSub() {
       });
   }, []);
 
+  // 페이지 이동 시
+  useEffect(() => {
+    console.log('22');
+    if (DISPLAY_INDEX < MAX_PAGE) {
+      setArrayView(prev => {
+        return calcArrayView(1, DISPLAY_INDEX);
+      });
+    } else if (current - SIDE_DISPLAY_INDEX >= 1) {
+      if (current <= DISPLAY_INDEX - SIDE_DISPLAY_INDEX) {
+        setArrayView(prev => {
+          return calcArrayView(
+            current - SIDE_DISPLAY_INDEX,
+            current + SIDE_DISPLAY_INDEX,
+          );
+        });
+      } else {
+        // 마지막 페이지일때
+        setArrayView(prev => {
+          return calcArrayView(DISPLAY_INDEX - MAX_PAGE + 1, DISPLAY_INDEX);
+        });
+      }
+    } else {
+      //첫번째 페이지일때->1,2
+      setArrayView(prev => {
+        return calcArrayView(1, MAX_PAGE);
+      });
+    }
+    setCurrent(current);
+    getAllCourseList(filter, (current - 1) * DISPLAY_CARD, DISPLAY_CARD)
+      .then((data: any) => {
+        setCourseCount(data.course_count);
+        setCourseList(prev => {
+          return data.courses;
+        });
+      })
+      .catch(err => console.log(err));
+  }, [current]);
+
+  // cost 필터 적용 시 렌더링
+  useEffect(() => {
+    setCurrent(1);
+    console.log('33');
+    getAllCourseList(filter, 0, DISPLAY_CARD)
+      .then((data: any) => {
+        setCourseCount(prev => {
+          return data.course_count;
+        });
+        setCourseList(data.courses);
+      })
+      .then(() => {
+        console.log(courseCount);
+        console.log(DISPLAY_INDEX);
+        {
+          DISPLAY_INDEX >= 1
+            ? DISPLAY_INDEX >= MAX_PAGE
+              ? setArrayView(prev => {
+                  return calcArrayView(1, MAX_PAGE);
+                })
+              : setArrayView(prev => {
+                  return calcArrayView(1, DISPLAY_INDEX);
+                })
+            : '';
+        }
+      })
+      .catch(err => console.log(err));
+  }, [filter]);
+
+  useEffect(() => {}, [courseCount]);
+
   const onClickLeft = () => {
     current === 1 ? '' : setCurrent(current - 1);
   };
   const onClickRight = () => {
     current === DISPLAY_INDEX ? '' : setCurrent(current + 1);
   };
-  useEffect(() => {
-    if (DISPLAY_INDEX < MAX_PAGE) {
-      setArrayView(calcArrayView(1, DISPLAY_INDEX));
-    } else if (current - SIDE_DISPLAY_INDEX >= 1) {
-      if (current <= DISPLAY_INDEX - SIDE_DISPLAY_INDEX) {
-        setArrayView(
-          calcArrayView(
-            current - SIDE_DISPLAY_INDEX,
-            current + SIDE_DISPLAY_INDEX,
-          ),
-        );
-      } else {
-        // 마지막 페이지일때
-        setArrayView(
-          calcArrayView(DISPLAY_INDEX - MAX_PAGE + 1, DISPLAY_INDEX),
-        );
-      }
-    } else {
-      //첫번째 페이지일때->1,2
-      setArrayView(calcArrayView(1, MAX_PAGE));
-    }
-    setCurrent(current);
-    getAllCourseList(filter, (current - 1) * DISPLAY_CARD, DISPLAY_CARD)
-      .then((data: any) => {
-        setCourseCount(data.course_count);
-        setCourseList(data.courses);
-      })
-      .catch(err => console.log(err));
-  }, [current]);
-  useEffect(() => {
-    getAllCourseList(filter, current * DISPLAY_CARD, DISPLAY_CARD)
-      .then((data: any) => {
-        setCourseCount(data.course_count);
-        setCourseList(data.courses);
-      })
-      .catch(err => console.log(err));
-  }, [filter]);
 
   return (
     <div className={$.container}>
