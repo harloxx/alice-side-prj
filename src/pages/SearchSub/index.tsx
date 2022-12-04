@@ -5,28 +5,59 @@ import { getAllCourseList } from '../../api/courselist';
 import React, { useState } from 'react';
 import { useEffect } from 'react';
 import $ from './style.module.scss';
-import { useAppDispatch } from '../../store';
+import { useAppDispatch, useAppSelector } from '../../store';
 import { AiOutlineRight, AiOutlineLeft } from 'react-icons/ai';
+import {
+  setInitialArray,
+  setCurrent,
+  setCount,
+  setArrayView,
+} from '../../store/features/courseSlice';
+import calcArray from '../../utils/calcArray';
+import calcArrayView from '../../utils/calcArrayView';
 export default function SearchSub() {
   const [courseList, setCourseList] = useState([]);
   const [courseCount, setCourseCount] = useState(0);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [lastPage, setLastPage] = useState(-1);
-  const [CurrentPageArr, setCurrentPageArr] = useState<number[]>([]);
-  const [page, setPage] = useState<number[]>([]);
-  const [pageNumber, setPageNumber] = useState<number[]>([]);
-  //const pageNumber: number[] = [];
+
+  const dispatch = useAppDispatch();
+  const setPageArray = (page: any) => {
+    dispatch(setInitialArray(page));
+  };
+  const setC = (number: any) => {
+    dispatch(setCurrent(number));
+  };
+  const setA = (number: any) => {
+    dispatch(setCount(number));
+  };
+  const setAV = (number: any) => {
+    dispatch(setArrayView(number));
+  };
+
+  const { arrayView, current, count } = useAppSelector(state => state.course);
 
   useEffect(() => {
     getAllCourseList()
       .then((data: any) => {
+        console.log(data);
         setCourseCount(data.course_count);
         setCourseList(data.courses);
-        for (let i = 1; i <= courseCount; i++) {
-          setPageNumber([...pageNumber, i]);
-          //pageNumber.push(i);
-          console.log(courseCount);
-          console.log(pageNumber);
+      })
+      .then(() => {
+        setA(courseCount);
+
+        console.log('couseCount : ' + courseCount, count);
+        setPageArray(calcArray(count));
+
+        //맨 처음 접속 시 current index 값 1
+        if (count) {
+          setC(1);
+          {
+            count >= 1
+              ? count >= 5
+                ? setAV(calcArrayView(1, 5))
+                : setAV(calcArrayView(1, count))
+              : '';
+          }
         }
       })
       .catch((err: any) => {
@@ -34,25 +65,31 @@ export default function SearchSub() {
       });
   }, []);
 
+  const onClickLeft = () => {
+    current === 1 ? '' : setC(current - 1);
+  };
+  const onClickRight = () => {
+    current === count ? '' : setC(current + 1);
+  };
   useEffect(() => {
-    let tempArr = [...pageNumber];
-    console.log(tempArr);
-    if (pageNumber.length < 5) {
-    } else if (currentPage - 2 >= 1) {
-      if (currentPage <= pageNumber.length - 2) {
-        tempArr = tempArr.slice(currentPage - 3, currentPage + 2);
+    let tempArr: number[] = [];
+    if (count < 5) {
+      setAV(calcArrayView(1, count));
+    } else if (current - 2 >= 1) {
+      if (current <= count - 2) {
+        setAV(calcArrayView(current - 2, current + 2));
       } else {
         // 마지막 페이지일때
-        console.log('aas');
-        tempArr = tempArr.slice(pageNumber.length - 5, pageNumber.length + 1);
+        setAV(calcArrayView(current - 5, current + 2));
       }
     } else {
       //첫번째 페이지일때->1,2
-      tempArr = tempArr.slice(0, 5);
+      setAV(calcArrayView(1, 5));
     }
-    setPage(tempArr);
-  }, [currentPage]);
-  console.log(pageNumber);
+    setC(current);
+  }, [current]);
+
+  console.log(current, '현재, ', arrayView, ' 배열');
 
   return (
     <div className={$.container}>
@@ -61,8 +98,6 @@ export default function SearchSub() {
       <FilterBar />
       <br />
       <br />
-      <span>전체 {courseCount}개</span>
-      <hr />
       <div className={$['cards']}>
         {courseList.map((course: any) => {
           return (
@@ -79,21 +114,17 @@ export default function SearchSub() {
       </div>
       <div className={$['index']}>
         <AiOutlineLeft
-          className={
-            currentPage === 1 ? $['arrow-deactive'] : $['arrow-active']
-          }
-          onClick={() => setCurrentPage(prev => (prev === 1 ? prev : prev - 1))}
+          className={current === 1 ? $['arrow-deactive'] : $['arrow-active']}
+          onClick={onClickLeft}
         />
-        {page.map(p => {
+        {arrayView.map(p => {
           return (
             <div
               key={p}
               className={
-                currentPage === p
-                  ? $['index-num-active']
-                  : $['index-num-deactive']
+                current === p ? $['index-num-active'] : $['index-num-deactive']
               }
-              onClick={() => setCurrentPage(p)}
+              onClick={() => setC(p)}
             >
               {p}
             </div>
@@ -102,15 +133,9 @@ export default function SearchSub() {
 
         <AiOutlineRight
           className={
-            currentPage === pageNumber.length
-              ? $['arrow-deactive']
-              : $['arrow-active']
+            current === count ? $['arrow-deactive'] : $['arrow-active']
           }
-          onClick={() =>
-            setCurrentPage(prev =>
-              prev === pageNumber.length ? prev : prev + 1,
-            )
-          }
+          onClick={onClickRight}
         />
       </div>
     </div>
