@@ -47,6 +47,7 @@ export default function SearchSub() {
 
         console.log('couseCount : ' + courseCount, count);
         setPageArray(calcArray(count));
+        console.log('-');
 
         //맨 처음 접속 시 current index 값 1
         if (count) {
@@ -58,6 +59,8 @@ export default function SearchSub() {
                 : setAV(calcArrayView(1, count))
               : '';
           }
+        } else {
+          setC(current);
         }
       })
       .catch((err: any) => {
