@@ -23,21 +23,18 @@ export default function SearchSub() {
   const [courseList, setCourseList] = useState([]);
   const [arrayView, setArrayView] = useState<number[]>([]);
   const [current, setCurrent] = useState(0);
-  //const [displayIdx,setDisplayIdx]=useState(DISPLAY_INDEX_INIT)
 
   const { filter } = useAppSelector(state => state.filter);
 
   useEffect(() => {
-    console.log('11');
     getAllCourseList(filter, current * DISPLAY_CARD, DISPLAY_CARD)
-      .then((data: any) => {
+      .then(data => {
         setCourseCount(data.course_count);
         setCourseList(data.courses);
       })
       .then(() => {
         //맨 처음 접속 시 current index 값 1
-        if (current === 1) {
-          //현재 값은 redux-persist로 저장해야할 듯
+        if (current === 0) {
           setCurrent(prev => {
             return 1;
           });
@@ -58,14 +55,13 @@ export default function SearchSub() {
           });
         }
       })
-      .catch((err: any) => {
+      .catch(err => {
         console.log(err);
       });
   }, []);
 
   // 페이지 이동 시
   useEffect(() => {
-    console.log('22');
     if (DISPLAY_INDEX < MAX_PAGE) {
       setArrayView(prev => {
         return calcArrayView(1, DISPLAY_INDEX);
@@ -90,9 +86,11 @@ export default function SearchSub() {
         return calcArrayView(1, MAX_PAGE);
       });
     }
-    setCurrent(current);
+    setCurrent(prev => {
+      return current;
+    });
     getAllCourseList(filter, (current - 1) * DISPLAY_CARD, DISPLAY_CARD)
-      .then((data: any) => {
+      .then(data => {
         setCourseCount(data.course_count);
         setCourseList(prev => {
           return data.courses;
@@ -103,8 +101,9 @@ export default function SearchSub() {
 
   // cost 필터 적용 시 렌더링
   useEffect(() => {
-    setCurrent(1);
-    console.log('33');
+    setCurrent(prev => {
+      return 1;
+    });
     getAllCourseList(filter, 0, DISPLAY_CARD)
       .then((data: any) => {
         setCourseCount(prev => {
@@ -113,24 +112,16 @@ export default function SearchSub() {
         setCourseList(data.courses);
       })
       .then(() => {
-        console.log(courseCount);
-        console.log(DISPLAY_INDEX);
         {
           DISPLAY_INDEX >= 1
             ? DISPLAY_INDEX >= MAX_PAGE
-              ? setArrayView(prev => {
-                  return calcArrayView(1, MAX_PAGE);
-                })
-              : setArrayView(prev => {
-                  return calcArrayView(1, DISPLAY_INDEX);
-                })
+              ? setArrayView(calcArrayView(1, MAX_PAGE))
+              : setArrayView(calcArrayView(1, DISPLAY_INDEX))
             : '';
         }
       })
       .catch(err => console.log(err));
   }, [filter]);
-
-  useEffect(() => {}, [courseCount]);
 
   const onClickLeft = () => {
     current === 1 ? '' : setCurrent(current - 1);
