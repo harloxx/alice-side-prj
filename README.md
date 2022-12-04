@@ -1,46 +1,43 @@
-# Getting Started with Create React App
+## ALICE FRONTEND PA
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+### What I used  
+- Package Manager <img src="https://img.shields.io/badge/npm-CB3837?style=flat-square&logo=npm&logoColor=white">  
 
-## Available Scripts
+- Frontend <img src="https://img.shields.io/badge/React-61DAFB?style=flat-square&logo=React&logoColor=white">  <img src="https://img.shields.io/badge/TypeScript-007396?style=flat-square&logo=TypeScript&logoColor=white">   <img src="https://img.shields.io/badge/Redux-764ABC?style=flat-square&logo=Redux&logoColor=white"> <img src="https://img.shields.io/badge/Scss-DB7093?style=flat-square&logo=Sass&logoColor=white">  
 
-In the project directory, you can run:
+- Code Formmater <img src="https://img.shields.io/badge/ESLint-4B32C3?style=flat-square&logo=ESLint&logoColor=white"> <img src="https://img.shields.io/badge/Prettier-F7B93E?style=flat-square&logo=React&logoColor=white">
 
-### `npm start`
+### Code Structure  
+```
+📂 src
+├─ 📂 api  ▶️ api 호출 
+├─ 📂 constants  ▶️ 상수 값
+├─ 📂 components  ▶️ 페이지에 사용되는 컴포넌트
+├─ 📂 pages  ▶️ 렌더링 할 페이지
+├─ 📂 store  ▶️ 리덕스
+├─ 📂 styles  ▶️ 공통적으로 사용되는 스타일 값 관리
+├─ 📂 utils  ▶️ 자주 사용되는 함수
+└─ 📂 _mock  ▶️ 샘플 데이터
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+```
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
 
-### `npm test`
+### Demo    
+https://user-images.githubusercontent.com/79822913/205503858-a82f5692-b15e-49e2-a3c0-36feff552695.mp4
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `npm run build`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
++ 리덕스 활용하여 필터링 목록 저장
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
+### Prob  
+https://user-images.githubusercontent.com/79822913/205503940-689ac567-b5ac-4b13-b4f8-d8ee48d934a8.mp4
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+  
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+페이지네이션 시 숫자들 렌더링이 바로 일어나지 않는 문제가 있습니다. useState의 비동기적 동작이 문제인 듯 합니다. 동기적으로 동작시키기 위해 setState를 함수형식으로 작성해보았지만 해결되지 않았습니다.   
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
-## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
