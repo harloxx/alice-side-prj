@@ -22,11 +22,23 @@
       line-height: 1.6rem;
       color: #222;
       margin: 10px 0;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      overflow: hidden;
+      height: 50px;
     }
     .subtitle {
       font-size: 14px;
+
+      height: 40px;
       color: #5e5f61;
       margin: 20px 0;
+
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      overflow: hidden;
     }
     .des {
       display: flex;
