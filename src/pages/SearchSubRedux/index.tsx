@@ -36,7 +36,7 @@ export default function SearchSub() {
   const { arrayView, current, count } = useAppSelector(state => state.course);
 
   useEffect(() => {
-    getAllCourseList()
+    getAllCourseList(0, 20)
       .then((data: any) => {
         console.log(data);
         setCourseCount(data.course_count);

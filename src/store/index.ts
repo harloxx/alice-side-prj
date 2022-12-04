@@ -5,9 +5,13 @@ import { combineReducers } from 'redux';
 import { persistReducer } from 'redux-persist';
 import thunk from 'redux-thunk';
 import courseReducer from './features/courseSlice';
+import titleReducer from './features/titleSlice';
+import pageReducer from './features/pageSlice';
 
 const reducers = combineReducers({
   course: courseReducer,
+  title: titleReducer,
+  page: pageReducer,
 });
 
 const persistConfig = {
