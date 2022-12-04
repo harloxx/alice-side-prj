@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 const name = 'FilterSlice';
 
@@ -10,6 +10,7 @@ const initialState: filterState = {
   filter: [],
 };
 
+//추후 any type 수정 필요
 export const filterSlice = createSlice({
   name: name,
   initialState,
