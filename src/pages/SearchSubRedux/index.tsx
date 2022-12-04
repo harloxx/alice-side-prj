@@ -18,9 +18,22 @@ import calcArrayView from '../../utils/calcArrayView';
 export default function SearchSub() {
   const [courseList, setCourseList] = useState([]);
   const [courseCount, setCourseCount] = useState(0);
-  const [array, setArray] = useState<number[]>([]);
-  const [arrayView, setArrayView] = useState<number[]>([]);
-  const [current, setCurrent] = useState(0);
+
+  const dispatch = useAppDispatch();
+  const setPageArray = (page: any) => {
+    dispatch(setInitialArray(page));
+  };
+  const setC = (number: any) => {
+    dispatch(setCurrent(number));
+  };
+  const setA = (number: any) => {
+    dispatch(setCount(number));
+  };
+  const setAV = (number: any) => {
+    dispatch(setArrayView(number));
+  };
+
+  const { arrayView, current, count } = useAppSelector(state => state.course);
 
   useEffect(() => {
     getAllCourseList()
@@ -30,21 +43,24 @@ export default function SearchSub() {
         setCourseList(data.courses);
       })
       .then(() => {
-        console.log('couseCount : ' + courseCount);
-        setArray(calcArray(courseCount));
+        setA(courseCount);
+
+        console.log('couseCount : ' + courseCount, count);
+        setPageArray(calcArray(count));
+        console.log('-');
+
         //맨 처음 접속 시 current index 값 1
-        if (courseCount) {
-          //현재 값은 redux-persist로 저장해야함
-          setCurrent(1);
+        if (count) {
+          setC(1);
           {
-            courseCount >= 1
-              ? courseCount >= 5
-                ? setArrayView(calcArrayView(1, 5))
-                : setArrayView(calcArrayView(1, courseCount))
+            count >= 1
+              ? count >= 5
+                ? setAV(calcArrayView(1, 5))
+                : setAV(calcArrayView(1, count))
               : '';
           }
         } else {
-          setCurrent(current);
+          setC(current);
         }
       })
       .catch((err: any) => {
@@ -53,26 +69,27 @@ export default function SearchSub() {
   }, []);
 
   const onClickLeft = () => {
-    current === 1 ? '' : setCurrent(current - 1);
+    current === 1 ? '' : setC(current - 1);
   };
   const onClickRight = () => {
-    current === courseCount ? '' : setCurrent(current + 1);
+    current === count ? '' : setC(current + 1);
   };
   useEffect(() => {
-    if (courseCount < 5) {
-      setArrayView(calcArrayView(1, courseCount));
+    let tempArr: number[] = [];
+    if (count < 5) {
+      setAV(calcArrayView(1, count));
     } else if (current - 2 >= 1) {
-      if (current <= courseCount - 2) {
-        setArrayView(calcArrayView(current - 2, current + 2));
+      if (current <= count - 2) {
+        setAV(calcArrayView(current - 2, current + 2));
       } else {
         // 마지막 페이지일때
-        setArrayView(calcArrayView(current - 5, current + 2));
+        setAV(calcArrayView(current - 5, current + 2));
       }
     } else {
       //첫번째 페이지일때->1,2
-      setArrayView(calcArrayView(1, 5));
+      setAV(calcArrayView(1, 5));
     }
-    setCurrent(current);
+    setC(current);
   }, [current]);
 
   console.log(current, '현재, ', arrayView, ' 배열');
@@ -110,7 +127,7 @@ export default function SearchSub() {
               className={
                 current === p ? $['index-num-active'] : $['index-num-deactive']
               }
-              onClick={() => setCurrent(p)}
+              onClick={() => setC(p)}
             >
               {p}
             </div>
@@ -119,7 +136,7 @@ export default function SearchSub() {
 
         <AiOutlineRight
           className={
-            current === courseCount ? $['arrow-deactive'] : $['arrow-active']
+            current === count ? $['arrow-deactive'] : $['arrow-active']
           }
           onClick={onClickRight}
         />
