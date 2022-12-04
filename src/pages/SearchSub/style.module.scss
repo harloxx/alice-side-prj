@@ -4,15 +4,15 @@
   background-color: rgb(240, 241, 243);
   width: 100%;
   box-sizing: border-box;
-
   padding: 24px;
   .desktop-container {
     @include desktop {
-      width: $desktop;
+      width: $max-row;
       margin: 0 auto;
     }
   }
   .cards {
+    width: 100%;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(296px, auto));
     grid-gap: 16px;
