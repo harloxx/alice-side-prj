@@ -86,53 +86,59 @@ export default function SearchSub() {
 
   return (
     <div className={$.container}>
-      <SearchBar />
-      <br />
-      <FilterBar />
-      <br />
-      <span>전체 {courseCount}개</span>
-      <hr />
-      <div className={$['cards']}>
-        {courseList.map((course: any) => {
-          return (
-            <CourseCard
-              key={course.id}
-              title={course.title}
-              subtitle={course.short_description}
-              image={course.logo_file_url}
-              is_free={course.is_free}
-              enroll_type={course.enroll_type}
-            />
-          );
-        })}
-      </div>
-      <div className={$['index']}>
-        <AiOutlineLeft
-          className={current === 1 ? $['arrow-deactive'] : $['arrow-active']}
-          onClick={onClickLeft}
-        />
+      <div className={$['desktop-container']}>
+        <SearchBar />
+        <br />
+        <FilterBar />
+        <br />
+        <span>전체 {courseCount}개</span>
+        <hr />
+        <div className={$['cards']}>
+          {courseList?.map((course: any) => {
+            return (
+              <CourseCard
+                key={course.id}
+                title={course.title}
+                subtitle={course.short_description}
+                image={course.logo_file_url}
+                is_free={course.is_free}
+                enroll_type={course.enroll_type}
+              />
+            );
+          })}
+        </div>
+        <div className={$['index']}>
+          <AiOutlineLeft
+            className={current === 1 ? $['arrow-deactive'] : $['arrow-active']}
+            onClick={onClickLeft}
+          />
 
-        {arrayView.map(p => {
-          // prob. 한 번 더 렌더링 되어야 숫자가 다시 나타남
-          return (
-            <div
-              key={p}
-              className={
-                current === p ? $['index-num-active'] : $['index-num-deactive']
-              }
-              onClick={() => setCurrent(p)}
-            >
-              {p}
-            </div>
-          );
-        })}
+          {arrayView.map(p => {
+            // prob. 한 번 더 렌더링 되어야 숫자가 다시 나타남
+            return (
+              <div
+                key={p}
+                className={
+                  current === p
+                    ? $['index-num-active']
+                    : $['index-num-deactive']
+                }
+                onClick={() => setCurrent(p)}
+              >
+                {p}
+              </div>
+            );
+          })}
 
-        <AiOutlineRight
-          className={
-            current === DISPLAY_INDEX ? $['arrow-deactive'] : $['arrow-active']
-          }
-          onClick={onClickRight}
-        />
+          <AiOutlineRight
+            className={
+              current === DISPLAY_INDEX
+                ? $['arrow-deactive']
+                : $['arrow-active']
+            }
+            onClick={onClickRight}
+          />
+        </div>
       </div>
     </div>
   );

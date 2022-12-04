@@ -1,12 +1,16 @@
 @import '../../styles/utils.scss';
 
 .container {
-  background-color: aliceblue;
+  background-color: rgb(240, 241, 243);
   width: 100%;
   box-sizing: border-box;
-  @include desktop {
-    padding: 24px;
-    background-color: pink;
+
+  padding: 24px;
+  .desktop-container {
+    @include desktop {
+      width: $desktop;
+      margin: 0 auto;
+    }
   }
   .cards {
     display: grid;
