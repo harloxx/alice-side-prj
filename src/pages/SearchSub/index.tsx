@@ -22,43 +22,58 @@ export default function SearchSub() {
 
   const [courseList, setCourseList] = useState([]);
   const [arrayView, setArrayView] = useState<number[]>([]);
-  const [current, setCurrent] = useState(0);
+  const [current, setCurrent] = useState(1);
+  const [click, setClick] = useState(false);
 
   const { filter } = useAppSelector(state => state.filter);
+  const { search } = useAppSelector(state => state.search);
+
+  const calcInitArray = () => {
+    {
+      DISPLAY_INDEX >= 1
+        ? DISPLAY_INDEX >= MAX_PAGE
+          ? setArrayView(prev => {
+              return calcArrayView(1, MAX_PAGE);
+            })
+          : setArrayView(prev => {
+              return calcArrayView(1, DISPLAY_INDEX);
+            })
+        : '';
+    }
+  };
 
   useEffect(() => {
-    getAllCourseList(filter, current * DISPLAY_CARD, DISPLAY_CARD)
+    getAllCourseList(filter, search, 0, DISPLAY_CARD)
       .then(data => {
         setCourseCount(data.course_count);
         setCourseList(data.courses);
       })
       .then(() => {
         //맨 처음 접속 시 current index 값 1
-        if (current === 0) {
-          setCurrent(prev => {
-            return 1;
-          });
-          {
-            DISPLAY_INDEX >= 1
-              ? DISPLAY_INDEX >= MAX_PAGE
-                ? setArrayView(prev => {
-                    return calcArrayView(1, MAX_PAGE);
-                  })
-                : setArrayView(prev => {
-                    return calcArrayView(1, DISPLAY_INDEX);
-                  })
-              : '';
-          }
-        } else {
-          setCurrent(prev => {
-            return current;
-          });
-        }
+        calcInitArray();
       })
       .catch(err => {
         console.log(err);
       });
   }, []);
+
+  // 검색
+  useEffect(() => {
+    getAllCourseList(filter, search, 0, DISPLAY_CARD)
+      .then(data => {
+        setCourseCount(data.course_count);
+        setCourseList(data.courses);
+      })
+      .then(() => {
+        setCurrent(prev => {
+          return 1;
+        });
+        calcInitArray();
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }, [click]);
 
   // 페이지 이동 시
   useEffect(() => {
@@ -89,7 +104,7 @@ export default function SearchSub() {
     setCurrent(prev => {
       return current;
     });
-    getAllCourseList(filter, (current - 1) * DISPLAY_CARD, DISPLAY_CARD)
+    getAllCourseList(filter, search, (current - 1) * DISPLAY_CARD, DISPLAY_CARD)
       .then(data => {
         setCourseCount(data.course_count);
         setCourseList(prev => {
@@ -104,7 +119,7 @@ export default function SearchSub() {
     setCurrent(prev => {
       return 1;
     });
-    getAllCourseList(filter, 0, DISPLAY_CARD)
+    getAllCourseList(filter, search, 0, DISPLAY_CARD)
       .then((data: any) => {
         setCourseCount(prev => {
           return data.course_count;
@@ -112,13 +127,7 @@ export default function SearchSub() {
         setCourseList(data.courses);
       })
       .then(() => {
-        {
-          DISPLAY_INDEX >= 1
-            ? DISPLAY_INDEX >= MAX_PAGE
-              ? setArrayView(calcArrayView(1, MAX_PAGE))
-              : setArrayView(calcArrayView(1, DISPLAY_INDEX))
-            : '';
-        }
+        calcInitArray();
       })
       .catch(err => console.log(err));
   }, [filter]);
@@ -133,7 +142,12 @@ export default function SearchSub() {
   return (
     <div className={$.container}>
       <div className={$['desktop-container']}>
-        <SearchBar />
+        <SearchBar
+          click={click}
+          setClick={(v: boolean) => {
+            setClick(v);
+          }}
+        />
         <br />
         <FilterBar />
         <br />
