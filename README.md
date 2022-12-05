@@ -28,7 +28,20 @@ https://user-images.githubusercontent.com/79822913/205503858-a82f5692-b15e-49e2-
 
 
 
-+ 리덕스 활용하여 필터링 목록 저장
+
+
+
+https://user-images.githubusercontent.com/79822913/205580043-9ccb6f2a-6a3b-4c09-ba00-4d7f71c556ba.mp4
+
+
+
+
+
+
++ 반응형 UI
++ 검색 및 필터링(무료, 유료, 구독)
++ 페이지네이션
++ 리덕스 활용하여 필터링 목록, input 값 저장
 
 
 ### Prob  
